@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seguimiento de Tiempo Acumulativo</title>
+    <title>Calculadora de límite acumulativo</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2171/2171471.png" type="image/png">
+    <link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAABQMBAP8AAAD///8AAAD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARAAAAAAAAESQRAAAAABESJEERAAABEhIRQUEQABISESQRQUEAEhESJEERQQAREhIRQUERABISESQRQUEAEhESJEERQQAREhIzQUERABISMTMTQUEAEjEzETMTQQABMxEzETMQAAARMxEzEQAAAAARMxEAAAAAAAARAAAAD+fwAA+B8AAOAHAADAAwAAgAEAAIABAACAAQAAgAEAAIABAACAAQAAgAEAAIABAADAAwAA4AcAAPgfAAD+fwAA" rel="icon" type="image/x-icon">
 </head>
 <body>
     <div class="container" role="main">
-        <h1>Seguimiento de Tiempo Acumulativo</h1>
+        <h1>Calculadora de límite acumulativo</h1>
         <div class="input-section">
             <label for="event">Evento WCA:</label>
             <select id="event" onchange="updateSolveFields()" aria-label="Seleccionar evento WCA">
-                <option value="3" selected>3x3, 2x2, Pyraminx, etc. (3 intentos)</option>
-                <option value="5">4x4, 5x5, Megaminx, etc. (5 intentos)</option>
+                <option value="5" selected>2x2, 3x3, Pyraminx, etc. (5 intentos)</option>
+                <option value="3">6x6, 7x7, a ciegas (3 intentos)</option>
             </select>
             <div class="time-limit-section">
-                <label>Límite de tiempo:</label>
+                <label>Tiempo límite acumulativo:</label>
                 <div class="time-limit-input">
                     <input type="number" id="time-limit-min" min="0" placeholder="Min" aria-label="Minutos del límite de tiempo">
                     <span class="separator">:</span>
@@ -31,8 +31,18 @@
             <p>Tiempo total usado: <span id="total-time" aria-live="polite">0:00.00</span></p>
             <p>Tiempo restante: <span id="remaining-time" aria-live="polite">0:00.00</span></p>
         </div>
-        <button class="reset-button" onclick="resetAll()">Reiniciar</button>
-        <p class="storage-note">* Los datos se guardan automáticamente en tu navegador.</p>
+        <div class="button-group">
+            <button class="reset-button" onclick="resetAll()">Reiniciar</button>
+            <button class="help-button" onclick="openHelpPopup()">¿Qué es esto?</button>
+        </div>
+    </div>
+    <div id="help-popup" class="popup" role="dialog" aria-labelledby="popup-title" aria-hidden="true">
+        <div class="popup-content">
+            <h2 id="popup-title">¿Para qué sirve esto?</h2>
+            <p>Esta aplicación te ayuda a saber cuánto tiempo límite queda en categorías con límite acumulativo. Ingresá el límite de tiempo y los resultados para ver el tiempo total usado y el tiempo restante.</p>
+            <p>Para más detalles, consultá el <a href="https://www.worldcubeassociation.org/regulations/translations/spanish-american/#A1a2" target="_blank" rel="noopener noreferrer">Reglamento WCA <bold>(A1a2)</bold></a>.</p>
+            <button class="close-button" onclick="closeHelpPopup()" aria-label="Cerrar ventana emergente">Cerrar</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

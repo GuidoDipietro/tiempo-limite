@@ -116,6 +116,18 @@ function resetAll() {
     updateResults();
 }
 
+function openHelpPopup() {
+    document.getElementById('help-popup').style.display = 'flex';
+    document.getElementById('help-popup').setAttribute('aria-hidden', 'false');
+    document.querySelector('.close-button').focus();
+}
+
+function closeHelpPopup() {
+    document.getElementById('help-popup').style.display = 'none';
+    document.getElementById('help-popup').setAttribute('aria-hidden', 'true');
+    document.querySelector('.help-button').focus();
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     // Load saved time limit
@@ -126,4 +138,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('time-limit-min').addEventListener('input', validateAndUpdate);
     document.getElementById('time-limit-sec').addEventListener('input', validateAndUpdate);
     updateSolveFields();
+
+    // Add keyboard support for popup
+    document.getElementById('help-popup').addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeHelpPopup();
+        }
+    });
 });
