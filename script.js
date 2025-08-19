@@ -42,7 +42,6 @@ function updateTooltip(div) {
     const secondsInput = div.querySelector('.seconds');
     const tooltip = div.querySelector('.tooltip');
     const minutes = parseInt(minutesInput.value) || 0;
-    const seconds = parseInt(secondsInput.value) || 0;
     const isFocused = [div.querySelector('.minutes'), div.querySelector('.seconds'), div.querySelector('.centiseconds')]
         .includes(document.activeElement);
     tooltip.style.display = minutes >= 10 && isFocused && secondsInput.value === '' ? 'inline' : 'none';
