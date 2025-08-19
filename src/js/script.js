@@ -1,19 +1,5 @@
 let timeLimitCentiseconds = 0;
 
-function createSolveInput(i) {
-    return `
-        <div class="solve-input">
-            <label>#${i}:</label>
-            <input type="number" min="0" placeholder="Min" class="minutes">
-            <span class="separator">:</span>
-            <input type="number" min="0" max="59" placeholder="Seg" class="seconds">
-            <span class="separator">.</span>
-            <input type="number" min="0" max="99" placeholder="Centi" class="centiseconds">
-            <span class="tooltip" style="display: none;">Redondeá al segundo más cercano</span>
-        </div>
-    `;
-}
-
 function validateInput(input, max) {
     if (input.value < 0) input.value = '';
     if (max && input.value > max) input.value = max;
@@ -139,6 +125,10 @@ function closeHelpPopup() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    if (typeof updatePageLanguage === 'function') updatePageLanguage();
+    if (typeof updateAllText === 'function') updateAllText();
+    if (typeof updateLanguageButton === 'function') updateLanguageButton();
+    
     const savedTimeLimit = JSON.parse(localStorage.getItem('timeLimit') || '{}');
     document.getElementById('time-limit-min').value = savedTimeLimit.minutes || '';
     document.getElementById('time-limit-sec').value = savedTimeLimit.seconds || '';
@@ -147,3 +137,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('time-limit-sec').addEventListener('input', validateTimeLimit);
     updateSolveFields();
 });
+
+function createSolveInput(i) {
+    return `
+        <div class="solve-input">
+            <label>${getText('solveLabel', { number: i })}</label>
+            <input type="number" min="0" placeholder="${getText('minPlaceholder')}" class="minutes">
+            <span class="separator">:</span>
+            <input type="number" min="0" max="59" placeholder="${getText('secPlaceholder')}" class="seconds">
+            <span class="separator">.</span>
+            <input type="number" min="0" max="99" placeholder="${getText('centiPlaceholder')}" class="centiseconds">
+            <span class="tooltip" style="display: none;">${getText('tooltipText')}</span>
+        </div>
+    `;
+}
+
+window.updateSolveFields = updateSolveFields;
+
+
