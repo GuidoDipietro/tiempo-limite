@@ -87,5 +87,3 @@ window.getText = getText;
 window.setLanguage = setLanguage;
 window.updatePageLanguage = updatePageLanguage;
 window.updateAllText = updateAllText;
-
-

@@ -153,5 +153,3 @@ function createSolveInput(i) {
 }
 
 window.updateSolveFields = updateSolveFields;
-
-

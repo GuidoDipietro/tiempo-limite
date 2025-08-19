@@ -86,5 +86,3 @@ window.flagIcons = {
     br: 'https://flagcdn.com/w40/br.png',
     ar: 'https://flagcdn.com/w40/ar.png'
 };
-
-

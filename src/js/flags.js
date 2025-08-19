@@ -28,5 +28,3 @@ function toggleLanguage() {
 
 window.updateLanguageButton = updateLanguageButton;
 window.toggleLanguage = toggleLanguage;
-
-
