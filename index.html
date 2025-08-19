@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento de Tiempo Acumulativo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2171/2171471.png" type="image/png">
+</head>
+<body>
+    <div class="container" role="main">
+        <h1>Seguimiento de Tiempo Acumulativo</h1>
+        <div class="input-section">
+            <label for="event">Evento WCA:</label>
+            <select id="event" onchange="updateSolveFields()" aria-label="Seleccionar evento WCA">
+                <option value="3" selected>3x3, 2x2, Pyraminx, etc. (3 intentos)</option>
+                <option value="5">4x4, 5x5, Megaminx, etc. (5 intentos)</option>
+            </select>
+            <div class="time-limit-section">
+                <label>Límite de tiempo:</label>
+                <div class="time-limit-input">
+                    <input type="number" id="time-limit-min" min="0" placeholder="Min" aria-label="Minutos del límite de tiempo">
+                    <span class="separator">:</span>
+                    <input type="number" id="time-limit-sec" min="0" max="59" placeholder="Seg" aria-label="Segundos del límite de tiempo">
+                </div>
+            </div>
+        </div>
+        <div id="solve-fields" class="solve-fields" role="region" aria-label="Campos de tiempo de resolución"></div>
+        <div class="result">
+            <p>Tiempo total usado: <span id="total-time" aria-live="polite">0:00.00</span></p>
+            <p>Tiempo restante: <span id="remaining-time" aria-live="polite">0:00.00</span></p>
+        </div>
+        <button class="reset-button" onclick="resetAll()">Reiniciar</button>
+        <p class="storage-note">* Los datos se guardan automáticamente en tu navegador.</p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
