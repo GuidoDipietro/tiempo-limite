@@ -1,4 +1,4 @@
-let timeLimitSeconds = 0;
+let timeLimitCentiseconds = 0;
 
 function updateSolveFields() {
     const eventType = document.getElementById('event').value;
@@ -10,7 +10,7 @@ function updateSolveFields() {
         const div = document.createElement('div');
         div.className = 'solve-input';
         div.innerHTML = `
-            <label>Intento ${i}:</label>
+            <label>#${i}:</label>
             <input type="number" min="0" placeholder="Min" class="minutes" aria-label="Minutos del intento ${i}">
             <span class="separator">:</span>
             <input type="number" min="0" max="59" placeholder="Seg" class="seconds" aria-label="Segundos del intento ${i}">
@@ -39,69 +39,83 @@ function updateSolveFields() {
 
 function validateAndUpdate(event) {
     const input = event.target;
-    let isValid = true;
 
-    // Validate input
+    // Correct input values
     if (input.classList.contains('minutes') && input.value < 0) {
         input.value = '';
-        isValid = false;
-    }
-    if (input.classList.contains('seconds') && (input.value < 0 || input.value > 59)) {
-        input.value = input.value < 0 ? '' : (input.value > 59 ? 59 : input.value);
-        isValid = false;
-    }
-    if (input.classList.contains('centiseconds') && (input.value < 0 || input.value > 99)) {
-        input.value = input.value < 0 ? '' : (input.value > 99 ? 99 : input.value);
-        isValid = false;
+    } else if (input.classList.contains('seconds')) {
+        if (input.value < 0) {
+            input.value = '';
+        } else if (input.value > 59) {
+            input.value = 59;
+        }
+    } else if (input.classList.contains('centiseconds')) {
+        if (input.value < 0) {
+            input.value = '';
+        } else if (input.value > 99) {
+            input.value = 99;
+        }
     }
 
-    input.classList.toggle('invalid', !isValid);
+    updateResults();
+}
+
+function validateTimeLimit(event) {
+    const input = event.target;
+
+    // Correct input values
+    if (input.id === 'time-limit-min' && input.value < 0) {
+        input.value = '';
+    } else if (input.id === 'time-limit-sec') {
+        if (input.value < 0) {
+            input.value = '';
+        } else if (input.value > 59) {
+            input.value = 59;
+        }
+    }
+
     updateResults();
 }
 
 function updateResults() {
-    // Update time limit
-    const timeLimitMin = parseFloat(document.getElementById('time-limit-min').value) || 0;
-    const timeLimitSec = parseFloat(document.getElementById('time-limit-sec').value) || 0;
-    timeLimitSeconds = timeLimitMin * 60 + timeLimitSec;
-
-    // Validate time limit inputs
-    document.getElementById('time-limit-min').classList.toggle('invalid', timeLimitMin < 0);
-    document.getElementById('time-limit-sec').classList.toggle('invalid', timeLimitSec < 0 || timeLimitSec > 59);
+    // Update time limit in centiseconds
+    const timeLimitMin = parseInt(document.getElementById('time-limit-min').value) || 0;
+    const timeLimitSec = parseInt(document.getElementById('time-limit-sec').value) || 0;
+    timeLimitCentiseconds = timeLimitMin * 60 * 100 + timeLimitSec * 100;
 
     // Save time limit to local storage
     localStorage.setItem('timeLimit', JSON.stringify({ minutes: timeLimitMin, seconds: timeLimitSec }));
 
-    // Calculate total solve time
-    let totalSeconds = 0;
+    // Calculate total solve time in centiseconds
+    let totalCentiseconds = 0;
     const solves = [];
     document.querySelectorAll('.solve-input').forEach(div => {
-        const minutes = parseFloat(div.querySelector('.minutes').value) || 0;
-        const seconds = parseFloat(div.querySelector('.seconds').value) || 0;
-        const centiseconds = parseFloat(div.querySelector('.centiseconds').value) || 0;
-        totalSeconds += minutes * 60 + seconds + centiseconds / 100;
+        const minutes = parseInt(div.querySelector('.minutes').value) || 0;
+        const seconds = parseInt(div.querySelector('.seconds').value) || 0;
+        const centiseconds = parseInt(div.querySelector('.centiseconds').value) || 0;
+        totalCentiseconds += minutes * 60 * 100 + seconds * 100 + centiseconds;
         solves.push({ minutes, seconds, centiseconds });
     });
 
     // Save solve times to local storage
     localStorage.setItem('solveTimes', JSON.stringify(solves));
 
-    const remainingSeconds = timeLimitSeconds - totalSeconds;
+    const remainingCentiseconds = timeLimitCentiseconds - totalCentiseconds;
 
     // Format times as MM:SS.CC
-    const formatTime = (seconds) => {
-        const absoluteSeconds = Math.abs(seconds);
-        const mins = Math.floor(absoluteSeconds / 60);
-        const secs = Math.floor(absoluteSeconds % 60);
-        const centis = Math.floor((absoluteSeconds % 1) * 100);
-        const sign = seconds < 0 ? '-' : '';
+    const formatTime = (centiseconds) => {
+        const absoluteCentiseconds = Math.abs(centiseconds);
+        const mins = Math.floor(absoluteCentiseconds / (60 * 100));
+        const secs = Math.floor((absoluteCentiseconds % (60 * 100)) / 100);
+        const centis = absoluteCentiseconds % 100;
+        const sign = centiseconds < 0 ? '-' : '';
         return `${sign}${mins}:${secs.toString().padStart(2, '0')}.${centis.toString().padStart(2, '0')}`;
     };
 
-    document.getElementById('total-time').textContent = formatTime(totalSeconds);
+    document.getElementById('total-time').textContent = formatTime(totalCentiseconds);
     const remainingTimeElement = document.getElementById('remaining-time');
-    remainingTimeElement.textContent = formatTime(remainingSeconds);
-    remainingTimeElement.classList.toggle('negative', remainingSeconds < 0);
+    remainingTimeElement.textContent = formatTime(remainingCentiseconds);
+    remainingTimeElement.classList.toggle('negative', remainingCentiseconds < 0);
 }
 
 function resetAll() {
@@ -109,7 +123,6 @@ function resetAll() {
     document.getElementById('time-limit-sec').value = '';
     document.querySelectorAll('.solve-input input').forEach(input => {
         input.value = '';
-        input.classList.remove('invalid');
     });
     localStorage.removeItem('timeLimit');
     localStorage.removeItem('solveTimes');
@@ -135,8 +148,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('time-limit-min').value = savedTimeLimit.minutes || '';
     document.getElementById('time-limit-sec').value = savedTimeLimit.seconds || '';
 
-    document.getElementById('time-limit-min').addEventListener('input', validateAndUpdate);
-    document.getElementById('time-limit-sec').addEventListener('input', validateAndUpdate);
+    // Add event listeners for time limit inputs
+    document.getElementById('time-limit-min').addEventListener('input', validateTimeLimit);
+    document.getElementById('time-limit-sec').addEventListener('input', validateTimeLimit);
     updateSolveFields();
 
     // Add keyboard support for popup

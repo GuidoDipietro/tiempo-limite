@@ -1,3 +1,4 @@
+/* Import Poppins font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
 body {
@@ -7,15 +8,16 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    margin: 10px 0; /* Reducido de 20px a 10px */
     color: #0052A2;
     font-size: 16px;
-    overflow-y: hidden;
+    overflow-y: hidden; /* Mantenido para evitar scroll */
 }
 
 .container {
     background: white;
-    padding: 15px;
-    border-radius: 15px;
+    padding: 12px; /* Reducido de 15px a 12px */
+    border-radius: 12px; /* Reducido de 15px para estética móvil */
     box-shadow: 0 8px 20px rgba(135, 206, 235, 0.2);
     max-width: 600px;
     width: 90%;
@@ -29,30 +31,30 @@ body {
 h1 {
     color: #0052A2;
     font-weight: 600;
-    margin-bottom: 10px;
-    font-size: 28px;
+    margin-bottom: 8px; /* Reducido de 10px */
+    font-size: 24px; /* Reducido de 28px */
 }
 
 .input-section, .solve-fields, .result {
-    margin: 10px 0;
+    margin: 8px 0; /* Reducido de 10px */
 }
 
 label {
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 4px; /* Reducido de 6px */
     font-weight: 500;
     color: #0052A2;
     font-size: 1.1em;
 }
 
 select, input {
-    padding: 10px;
-    margin: 4px 0;
+    padding: 8px; /* Reducido de 10px */
+    margin: 3px 0; /* Reducido de 4px */
     border: 1px solid #87CEEB;
-    border-radius: 8px;
+    border-radius: 6px; /* Reducido de 8px */
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
-    font-size: 16px;
+    font-size: 14px; /* Reducido de 16px */
     background: #FFFFFF;
     transition: border-color 0.3s ease, transform 0.2s ease;
 }
@@ -68,62 +70,61 @@ select:focus, input:focus {
     transform: scale(1.02);
 }
 
-input.invalid {
-    border-color: #F56565;
-}
-
 .time-limit-section {
     background: #F5F7FA;
-    padding: 8px;
-    border-radius: 10px;
-    margin-top: 8px;
+    padding: 6px; /* Reducido de 8px */
+    border-radius: 8px; /* Reducido de 10px */
+    margin-top: 6px; /* Reducido de 8px */
 }
 
 .time-limit-input {
     display: flex;
-    gap: 5px;
+    gap: 4px; /* Reducido de 5px */
     justify-content: center;
     align-items: center;
 }
 
 .time-limit-input input {
-    width: 80px;
+    width: 70px; /* Reducido de 80px */
 }
 
 .time-limit-input .separator {
-    font-size: 18px;
+    font-size: 16px; /* Reducido de 18px */
     color: #0052A2;
     font-weight: 500;
 }
 
 .solve-input {
     display: flex;
-    gap: 5px;
-    margin-bottom: 5px;
+    gap: 4px; /* Reducido de 5px */
+    margin-bottom: 4px; /* Reducido de 5px */
     justify-content: center;
     align-items: center;
 }
 
 .solve-input label {
-    width: 100px;
-    text-align: left;
+    width: 80px; /* Reducido de 100px */
     font-size: 1.1em;
 }
 
 .solve-input input {
-    width: 80px;
+    width: 70px; /* Reducido de 80px */
+}
+
+.solve-input .centiseconds {
+    width: 70px; /* Reducido de 80px */
 }
 
 .solve-input .separator {
-    font-size: 18px;
+    font-size: 16px; /* Reducido de 18px */
     color: #0052A2;
     font-weight: 500;
 }
 
 .result p {
-    font-size: 1.3em;
+    font-size: 1.2em; /* Reducido de 1.3em */
     color: #0052A2;
-    margin: 8px 0;
+    margin: 6px 0; /* Reducido de 8px */
 }
 
 .result span {
@@ -137,18 +138,18 @@ input.invalid {
 
 .button-group {
     display: flex;
-    gap: 10px;
+    gap: 8px; /* Reducido de 10px */
     justify-content: center;
-    margin-top: 10px;
+    margin-top: 8px; /* Reducido de 10px */
 }
 
 .reset-button {
-    padding: 10px 20px;
+    padding: 8px 16px; /* Reducido de 10px 20px */
     background: #FF4C4C;
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
+    border-radius: 6px; /* Reducido de 8px */
+    font-size: 14px; /* Reducido de 16px */
     font-family: 'Poppins', sans-serif;
     cursor: pointer;
     transition: background 0.3s ease, transform 0.2s ease;
@@ -160,12 +161,12 @@ input.invalid {
 }
 
 .help-button {
-    padding: 10px 20px;
+    padding: 8px 16px; /* Reducido de 10px 20px */
     background: #FFFFFF;
     color: #0052A2;
     border: 2px solid #87CEEB;
-    border-radius: 8px;
-    font-size: 16px;
+    border-radius: 6px; /* Reducido de 8px */
+    font-size: 14px; /* Reducido de 16px */
     font-family: 'Poppins', sans-serif;
     cursor: pointer;
     transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
@@ -188,28 +189,36 @@ input.invalid {
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    overflow: hidden;
+}
+
+.popup[aria-hidden="false"] {
+    display: flex;
 }
 
 .popup-content {
     background: white;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 500px;
+    padding: 15px; /* Reducido de 20px */
+    border-radius: 8px; /* Reducido de 10px */
+    max-width: 90%; /* Cambiado de 500px a 90% para móviles */
     width: 90%;
     text-align: center;
     box-shadow: 0 8px 20px rgba(135, 206, 235, 0.2);
+    position: relative;
+    max-height: 70vh; /* Reducido de 80vh */
+    overflow-y: auto;
 }
 
 .popup-content h2 {
     color: #0052A2;
-    font-size: 24px;
-    margin-bottom: 15px;
+    font-size: 20px; /* Reducido de 24px */
+    margin-bottom: 10px; /* Reducido de 15px */
 }
 
 .popup-content p {
     color: #0052A2;
-    font-size: 16px;
-    margin-bottom: 15px;
+    font-size: 14px; /* Reducido de 16px */
+    margin-bottom: 10px; /* Reducido de 15px */
 }
 
 .popup-content a {
@@ -223,12 +232,12 @@ input.invalid {
 }
 
 .close-button {
-    padding: 10px 20px;
+    padding: 8px 16px; /* Reducido de 10px 20px */
     background: #87CEEB;
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
+    border-radius: 6px; /* Reducido de 8px */
+    font-size: 14px; /* Reducido de 16px */
     font-family: 'Poppins', sans-serif;
     cursor: pointer;
     transition: background 0.3s ease, transform 0.2s ease;
@@ -237,4 +246,95 @@ input.invalid {
 .close-button:hover {
     background: #4682B4;
     transform: scale(1.05);
+}
+
+/* Media Queries para pantallas móviles */
+@media (max-width: 600px) or (max-height: 600px) {
+    body {
+        margin: 5px 0; /* Reducido de 10px */
+    }
+
+    .container {
+        padding: 10px; /* Reducido de 12px */
+    }
+
+    h1 {
+        font-size: 20px; /* Reducido de 24px */
+        margin-bottom: 6px; /* Reducido de 8px */
+    }
+
+    .input-section, .solve-fields, .result {
+        margin: 6px 0; /* Reducido de 8px */
+    }
+
+    label {
+        margin-bottom: 3px; /* Reducido de 4px */
+        font-size: 1em; /* Reducido de 1.1em */
+    }
+
+    select, input {
+        padding: 6px; /* Reducido de 8px */
+        margin: 2px 0; /* Reducido de 3px */
+        font-size: 12px; /* Reducido de 14px */
+    }
+
+    .time-limit-input input {
+        width: 60px; /* Reducido de 70px */
+    }
+
+    .time-limit-input .separator {
+        font-size: 14px; /* Reducido de 16px */
+    }
+
+    .solve-input label {
+        width: 70px; /* Reducido de 80px */
+        font-size: 1em; /* Reducido de 1.1em */
+    }
+
+    .solve-input input {
+        width: 60px; /* Reducido de 70px */
+    }
+
+    .solve-input .centiseconds {
+        width: 60px; /* Reducido de 70px */
+    }
+
+    .solve-input .separator {
+        font-size: 14px; /* Reducido de 16px */
+    }
+
+    .result p {
+        font-size: 1.1em; /* Reducido de 1.2em */
+        margin: 4px 0; /* Reducido de 6px */
+    }
+
+    .button-group {
+        gap: 6px; /* Reducido de 8px */
+        margin-top: 6px; /* Reducido de 8px */
+    }
+
+    .reset-button, .help-button {
+        padding: 6px 12px; /* Reducido de 8px 16px */
+        font-size: 12px; /* Reducido de 14px */
+    }
+
+    .popup-content {
+        padding: 10px; /* Reducido de 15px */
+        max-height: 60vh; /* Reducido de 70vh */
+    }
+
+    .popup-content h2 {
+        font-size: 18px; /* Reducido de 20px */
+        margin-bottom: 8px; /* Reducido de 10px */
+    }
+
+    .popup-content p {
+        font-size: 12px; /* Reducido de 14px */
+        margin-bottom: 8px; /* Reducido de 10px */
+    }
+
+    .close-button {
+        padding: 6px 12px; /* Reducido de 8px 16px */
+        font-size: 12px; /* Reducido de 14px */
+    }
 }
