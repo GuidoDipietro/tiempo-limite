@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de límite acumulativo</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="src/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAABQMBAP8AAAD///8AAAD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARAAAAAAAAESQRAAAAABESJEERAAABEhIRQUEQABISESQRQUEAEhESJEERQQAREhIRQUERABISESQRQUEAEhESJEERQQAREhIzQUERABISMTMTQUEAEjEzETMTQQABMxEzETMQAAARMxEzEQAAAAARMxEAAAAAAAARAAAAD+fwAA+B8AAOAHAADAAwAAgAEAAIABAACAAQAAgAEAAIABAACAAQAAgAEAAIABAADAAwAA4AcAAPgfAAD+fwAA" rel="icon" type="image/x-icon">
 </head>
 <body>
     <div class="container" role="main">
-        <h1>Calculadora de límite acumulativo</h1>
+        <div class="header">
+            <h1>Calculadora de límite acumulativo</h1>
+            <button id="language-toggle" class="language-toggle" onclick="toggleLanguage()" aria-label="Cambiar idioma">
+            </button>
+        </div>
         <div class="input-section">
             <label for="event">Evento WCA:</label>
             <select id="event" onchange="updateSolveFields()" aria-label="Seleccionar evento WCA">
@@ -41,10 +45,13 @@
             <h2 id="popup-title">¿Para qué sirve esto?</h2>
             <p>Esta aplicación te ayuda a saber cuánto tiempo límite queda en categorías con límite acumulativo.</p>
             <p>Ingresá el límite de tiempo y los resultados para ver el tiempo total usado y el tiempo restante.</p>
-            <p>Para más detalles, consultá el <a href="https://www.worldcubeassociation.org/regulations/translations/spanish-american/#A1a2" target="_blank" rel="noopener noreferrer">Reglamento WCA <bold>(A1a2)</bold></a> o leé <a href="https://www.worldcubeassociation.org/competitions/NacionalesArgentinas2025#63546-limite-acumulativo-cumulative-limit" target="_blank" rel="noopener noreferrer">este ejemplo</a>.</p>
+            <p id="help-links">Para más detalles, consultá el <a href="#" target="_blank" rel="noopener noreferrer">Reglamento WCA <bold>(A1a2)</bold></a> o leé <a href="#" target="_blank" rel="noopener noreferrer">este ejemplo</a>.</p>
             <button class="close-button" onclick="closeHelpPopup()" aria-label="Cerrar ventana emergente">Cerrar</button>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script src="src/js/translations.js"></script>
+    <script src="src/js/i18n.js"></script>
+    <script src="src/js/flags.js"></script>
+    <script src="src/js/script.js"></script>
 </body>
 </html>

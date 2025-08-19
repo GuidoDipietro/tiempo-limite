@@ -10,7 +10,7 @@ El código seguramente no sea perfecto; de hecho, lo miré, y es bastante horrib
 
 Para más detalles, consultá el [Reglamento WCA **(A1a2)**](https://www.worldcubeassociation.org/regulations/translations/spanish-american/#A1a2) o leé [este ejemplo](https://www.worldcubeassociation.org/competitions/NacionalesArgentinas2025#63546-limite-acumulativo-cumulative-limit).
 
-Codeado por Grok, prompteado por [Guido Dipietro](https://www.worldcubeassociation.org/persons/2013dipi01).
+Codeado por Grok, mejorado por Cursor, prompteado por [Guido Dipietro](https://www.worldcubeassociation.org/persons/2013dipi01).
 
 ---
 
@@ -24,4 +24,4 @@ The code is probably not perfect; in fact, I looked at it, and it's pretty awful
 
 For more info, check the [WCA Regulations **(A1a2)**](https://www.worldcubeassociation.org/regulations/#A1a2) or read [this example](https://www.worldcubeassociation.org/competitions/NacionalesArgentinas2025#63546-limite-acumulativo-cumulative-limit).
 
-Coded by Grok, prompted by [Guido Dipietro](https://www.worldcubeassociation.org/persons/2013dipi01).
+Coded by Grok, enhanced by Cursor, prompted by [Guido Dipietro](https://www.worldcubeassociation.org/persons/2013dipi01).
