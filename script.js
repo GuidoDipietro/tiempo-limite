@@ -9,6 +9,7 @@ function createSolveInput(i) {
             <input type="number" min="0" max="59" placeholder="Seg" class="seconds">
             <span class="separator">.</span>
             <input type="number" min="0" max="99" placeholder="Centi" class="centiseconds">
+            <span class="tooltip" style="display: none;">Redondeá al segundo más cercano</span>
         </div>
     `;
 }
@@ -18,23 +19,64 @@ function validateInput(input, max) {
     if (max && input.value > max) input.value = max;
 }
 
+function handleMinutesInput(div) {
+    const minutesInput = div.querySelector('.minutes');
+    const secondsInput = div.querySelector('.seconds');
+    const centisecondsInput = div.querySelector('.centiseconds');
+    const minutes = parseInt(minutesInput.value) || 0;
+    const seconds = parseInt(secondsInput.value) || 0;
+    const centiseconds = parseInt(centisecondsInput.value) || 0;
+
+    centisecondsInput.disabled = minutes >= 10;
+    if (minutes < 10 || centiseconds === 0) return;
+
+    const shouldRoundUp = centiseconds >= 50;
+    minutesInput.value = shouldRoundUp && seconds >= 59 ? minutes + 1 : minutes;
+    secondsInput.value = shouldRoundUp ? (seconds >= 59 ? 0 : seconds + 1) : seconds;
+    centisecondsInput.value = '';
+    updateResults();
+}
+
+function updateTooltip(div) {
+    const minutesInput = div.querySelector('.minutes');
+    const secondsInput = div.querySelector('.seconds');
+    const tooltip = div.querySelector('.tooltip');
+    const minutes = parseInt(minutesInput.value) || 0;
+    const seconds = parseInt(secondsInput.value) || 0;
+    const isFocused = [div.querySelector('.minutes'), div.querySelector('.seconds'), div.querySelector('.centiseconds')]
+        .includes(document.activeElement);
+    tooltip.style.display = minutes >= 10 && isFocused && secondsInput.value === '' ? 'inline' : 'none';
+}
+
 function updateSolveFields() {
     const numSolves = parseInt(document.getElementById('event').value);
-    const solveFields = document.getElementById('solve-fields');
-    solveFields.innerHTML = Array.from({ length: numSolves }, (_, i) => createSolveInput(i + 1)).join('');
+    document.getElementById('solve-fields').innerHTML = Array.from({ length: numSolves }, (_, i) => createSolveInput(i + 1)).join('');
 
     const savedSolves = JSON.parse(localStorage.getItem('solveTimes') || '{}');
     document.querySelectorAll('.solve-input').forEach((div, index) => {
         const solve = savedSolves[index] || {};
-        div.querySelector('.minutes').value = solve.minutes || '';
-        div.querySelector('.seconds').value = solve.seconds || '';
-        div.querySelector('.centiseconds').value = solve.centiseconds || '';
-    });
+        const inputs = {
+            minutes: div.querySelector('.minutes'),
+            seconds: div.querySelector('.seconds'),
+            centiseconds: div.querySelector('.centiseconds')
+        };
+        inputs.minutes.value = solve.minutes || '';
+        inputs.seconds.value = solve.seconds || '';
+        inputs.centiseconds.value = solve.centiseconds || '';
+        
+        handleMinutesInput(div);
+        updateTooltip(div);
 
-    document.querySelectorAll('.solve-input input').forEach(input => {
-        input.addEventListener('input', () => {
-            validateInput(input, input.classList.contains('seconds') ? 59 : input.classList.contains('centiseconds') ? 99 : null);
-            updateResults();
+        Object.values(inputs).forEach(input => {
+            input.addEventListener('focus', () => updateTooltip(div));
+            input.addEventListener('blur', () => updateTooltip(div));
+            input.addEventListener('input', () => {
+                validateInput(input, input.classList.contains('seconds') ? 59 : input.classList.contains('centiseconds') ? 99 : null);
+                if (input.classList.contains('minutes')) handleMinutesInput(div);
+                if (input.classList.contains('seconds') || input.classList.contains('centiseconds')) div.querySelector('.tooltip').style.display = 'none';
+                updateResults();
+                updateTooltip(div);
+            });
         });
     });
 
@@ -82,7 +124,7 @@ function resetAll() {
     document.querySelectorAll('.solve-input input').forEach(input => input.value = '');
     localStorage.removeItem('timeLimit');
     localStorage.removeItem('solveTimes');
-    updateResults();
+    updateSolveFields();
 }
 
 function openHelpPopup() {
