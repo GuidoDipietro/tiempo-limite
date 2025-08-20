@@ -5,6 +5,18 @@ function validateInput(input, max) {
     if (max && input.value > max) input.value = max;
 }
 
+function handleEnterKey(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
+        const currentIndex = inputs.indexOf(event.target);
+        const nextInput = inputs[currentIndex + 1];
+        if (nextInput) {
+            nextInput.focus();
+        }
+    }
+}
+
 function handleMinutesInput(div) {
     const minutesInput = div.querySelector('.minutes');
     const secondsInput = div.querySelector('.seconds');
@@ -55,6 +67,7 @@ function updateSolveFields() {
         Object.values(inputs).forEach(input => {
             input.addEventListener('focus', () => updateTooltip(div));
             input.addEventListener('blur', () => updateTooltip(div));
+            input.addEventListener('keydown', handleEnterKey);
             input.addEventListener('input', () => {
                 validateInput(input, input.classList.contains('seconds') ? 59 : input.classList.contains('centiseconds') ? 99 : input.classList.contains('minutes') ? 120 : null);
                 if (input.classList.contains('minutes')) handleMinutesInput(div);
@@ -135,6 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('time-limit-min').addEventListener('input', validateTimeLimit);
     document.getElementById('time-limit-sec').addEventListener('input', validateTimeLimit);
+    document.getElementById('time-limit-min').addEventListener('keydown', handleEnterKey);
+    document.getElementById('time-limit-sec').addEventListener('keydown', handleEnterKey);
     updateSolveFields();
 });
 
