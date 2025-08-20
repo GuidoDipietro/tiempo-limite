@@ -56,7 +56,7 @@ function updateSolveFields() {
             input.addEventListener('focus', () => updateTooltip(div));
             input.addEventListener('blur', () => updateTooltip(div));
             input.addEventListener('input', () => {
-                validateInput(input, input.classList.contains('seconds') ? 59 : input.classList.contains('centiseconds') ? 99 : null);
+                validateInput(input, input.classList.contains('seconds') ? 59 : input.classList.contains('centiseconds') ? 99 : input.classList.contains('minutes') ? 120 : null);
                 if (input.classList.contains('minutes')) handleMinutesInput(div);
                 if (input.classList.contains('seconds') || input.classList.contains('centiseconds')) div.querySelector('.tooltip').style.display = 'none';
                 updateResults();
@@ -69,7 +69,7 @@ function updateSolveFields() {
 }
 
 function validateTimeLimit(event) {
-    validateInput(event.target, event.target.id === 'time-limit-sec' ? 59 : null);
+    validateInput(event.target, event.target.id === 'time-limit-sec' ? 59 : event.target.id === 'time-limit-min' ? 120 : null);
     updateResults();
 }
 
