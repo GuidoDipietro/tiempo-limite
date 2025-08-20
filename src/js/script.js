@@ -17,6 +17,47 @@ function handleEnterKey(event) {
     }
 }
 
+function setSolveToDNS(div) {
+    const inputs = div.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.disabled = true;
+        input.value = '';
+    });
+    
+    div.classList.add('dns-disabled');
+    div.classList.remove('dnf-warning');
+}
+
+function setSolveToNormal(div) {
+    const inputs = div.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.disabled = false;
+    });
+    
+    div.classList.remove('dns-disabled', 'dnf-warning', 'disabled-no-limit');
+}
+
+function setSolveToDisabled(div) {
+    const inputs = div.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.disabled = true;
+        input.value = '';
+    });
+    
+    div.classList.add('disabled-no-limit');
+    div.classList.remove('dns-disabled', 'dnf-warning');
+}
+
+function showDNSWarning(div, show) {
+    if (show) {
+        div.classList.add('dnf-warning');
+    } else {
+        div.classList.remove('dnf-warning');
+    }
+}
+
+
+
 function handleMinutesInput(div) {
     const minutesInput = div.querySelector('.minutes');
     const secondsInput = div.querySelector('.seconds');
@@ -95,12 +136,39 @@ function updateResults() {
 
     let totalCentiseconds = 0;
     const solves = [];
-    document.querySelectorAll('.solve-input').forEach(div => {
+    let remainingTime = timeLimitCentiseconds;
+    
+    document.querySelectorAll('.solve-input').forEach((div, index) => {
         const minutes = parseInt(div.querySelector('.minutes').value) || 0;
         const seconds = parseInt(div.querySelector('.seconds').value) || 0;
         const centiseconds = parseInt(div.querySelector('.centiseconds').value) || 0;
-        totalCentiseconds += minutes * 6000 + seconds * 100 + centiseconds;
+        const solveTime = minutes * 6000 + seconds * 100 + centiseconds;
+        
+        const wouldExceed = solveTime > 0 && remainingTime - solveTime < 0;
+        
+        if (solveTime > 0) {
+            totalCentiseconds += solveTime;
+            remainingTime -= solveTime;
+        }
+        
         solves.push({ minutes, seconds, centiseconds });
+        
+        if (timeLimitCentiseconds > 0) {
+            if (remainingTime <= 0 && solveTime === 0) {
+                setSolveToDNS(div);
+            } else if (wouldExceed) {
+                showDNSWarning(div, true);
+            } else {
+                setSolveToNormal(div);
+                showDNSWarning(div, false);
+            }
+        } else {
+            if (solveTime === 0) {
+                setSolveToDisabled(div);
+            } else {
+                setSolveToNormal(div);
+            }
+        }
     });
 
     localStorage.setItem('solveTimes', JSON.stringify(solves));
@@ -120,6 +188,9 @@ function resetAll() {
     document.getElementById('time-limit-min').value = '';
     document.getElementById('time-limit-sec').value = '';
     document.querySelectorAll('.solve-input input').forEach(input => input.value = '');
+    document.querySelectorAll('.solve-input').forEach(div => {
+        div.classList.remove('dns-disabled', 'dnf-warning', 'disabled-no-limit');
+    });
     localStorage.removeItem('timeLimit');
     localStorage.removeItem('solveTimes');
     updateSolveFields();
