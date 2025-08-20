@@ -119,7 +119,7 @@ function updateSolveFields() {
         });
     });
 
-    updateResults();
+    updateResults(true);
 }
 
 function validateTimeLimit(event) {
@@ -127,12 +127,20 @@ function validateTimeLimit(event) {
     updateResults();
 }
 
-function updateResults() {
-    const timeLimitMin = parseInt(document.getElementById('time-limit-min').value) || 0;
-    const timeLimitSec = parseInt(document.getElementById('time-limit-sec').value) || 0;
+function updateResults(skipSave = false) {
+    const timeLimitMinInput = document.getElementById('time-limit-min').value;
+    const timeLimitSecInput = document.getElementById('time-limit-sec').value;
+    const timeLimitMin = timeLimitMinInput === '' ? 0 : parseInt(timeLimitMinInput) || 0;
+    const timeLimitSec = timeLimitSecInput === '' ? 0 : parseInt(timeLimitSecInput) || 0;
     timeLimitCentiseconds = timeLimitMin * 6000 + timeLimitSec * 100;
 
-    localStorage.setItem('timeLimit', JSON.stringify({ minutes: timeLimitMin, seconds: timeLimitSec }));
+    if (!skipSave) {
+        if (timeLimitMinInput !== '' || timeLimitSecInput !== '') {
+            localStorage.setItem('timeLimit', JSON.stringify({ minutes: timeLimitMin, seconds: timeLimitSec }));
+        } else {
+            localStorage.removeItem('timeLimit');
+        }
+    }
 
     let totalCentiseconds = 0;
     const solves = [];
@@ -213,15 +221,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof updateAllText === 'function') updateAllText();
     if (typeof updateLanguageButton === 'function') updateLanguageButton();
     
-    const savedTimeLimit = JSON.parse(localStorage.getItem('timeLimit') || '{}');
-    document.getElementById('time-limit-min').value = savedTimeLimit.minutes || '';
-    document.getElementById('time-limit-sec').value = savedTimeLimit.seconds || '';
+    const savedTimeLimit = localStorage.getItem('timeLimit');
+    if (savedTimeLimit) {
+        const parsed = JSON.parse(savedTimeLimit);
+        document.getElementById('time-limit-min').value = parsed.minutes || '';
+        document.getElementById('time-limit-sec').value = parsed.seconds || '';
+    } else {
+        document.getElementById('time-limit-min').value = '';
+        document.getElementById('time-limit-sec').value = '';
+    }
 
     document.getElementById('time-limit-min').addEventListener('input', validateTimeLimit);
     document.getElementById('time-limit-sec').addEventListener('input', validateTimeLimit);
     document.getElementById('time-limit-min').addEventListener('keydown', handleEnterKey);
     document.getElementById('time-limit-sec').addEventListener('keydown', handleEnterKey);
+    
     updateSolveFields();
+    
+    if (savedTimeLimit) {
+        updateResults(false);
+    }
 });
 
 function createSolveInput(i) {
