@@ -28,12 +28,17 @@ function processSolveInput(div, index, totalCentiseconds, timeLimitCentiseconds)
     const solveTime = timeToCentiseconds(minutes, seconds, centiseconds);
     const wouldExceed = solveTime > 0 && (totalCentiseconds + solveTime) > timeLimitCentiseconds;
     
+    let finalCentiseconds;
+    if (centisecondsInput.disabled && div.dataset.storedCentiseconds) {
+        finalCentiseconds = div.dataset.storedCentiseconds === '' ? undefined : parseTimeValue(div.dataset.storedCentiseconds);
+    } else {
+        finalCentiseconds = centisecondsInput.value === '' ? undefined : centiseconds;
+    }
+    
     return { 
         minutes: minutesInput.value === '' ? undefined : minutes,
         seconds: secondsInput.value === '' ? undefined : seconds,
-        centiseconds: centisecondsInput.disabled && div.dataset.storedCentiseconds 
-            ? (div.dataset.storedCentiseconds === '' ? undefined : parseTimeValue(div.dataset.storedCentiseconds))
-            : (centisecondsInput.value === '' ? undefined : centiseconds),
+        centiseconds: finalCentiseconds,
         solveTime, 
         wouldExceed 
     };
@@ -47,30 +52,33 @@ function updateResults(skipSave = false) {
         saveTimeLimit(timeLimitMin, timeLimitSec);
     }
 
-    let totalCentiseconds = 0;
     const solves = [];
-    let remainingTime = timeLimitCentiseconds;
+    let cumulativeTime = 0;
     let firstDNFIndex = -1;
     
     document.querySelectorAll('.solve-input').forEach((div, index) => {
-        const solveData = processSolveInput(div, index, totalCentiseconds, timeLimitCentiseconds);
+        const solveData = processSolveInput(div, index, cumulativeTime, timeLimitCentiseconds);
         
         if (solveData.wouldExceed && firstDNFIndex === -1) {
             firstDNFIndex = index;
         }
         
         if (solveData.solveTime > 0) {
-            totalCentiseconds += solveData.solveTime;
-            remainingTime -= solveData.solveTime;
+            cumulativeTime += solveData.solveTime;
         }
         
-        solves.push({ minutes: solveData.minutes, seconds: solveData.seconds, centiseconds: solveData.centiseconds });
+        const centisecondsInput = div.querySelector('.centiseconds');
+        const storedCentiseconds = centisecondsInput.disabled && div.dataset.storedCentiseconds ? div.dataset.storedCentiseconds : undefined;
+        solves.push({ minutes: solveData.minutes, seconds: solveData.seconds, centiseconds: solveData.centiseconds, storedCentiseconds });
         
-        updateSolveState(div, { timeLimitCentiseconds, remainingTime, solveTime: solveData.solveTime, wouldExceed: solveData.wouldExceed, firstDNFIndex, currentIndex: index });
+        const isDNF = firstDNFIndex === index;
+        const isDNS = firstDNFIndex !== -1 && index > firstDNFIndex;
+        
+        updateSolveState(div, { isDNF, isDNS, solveTime: solveData.solveTime });
     });
 
     localStorage.setItem('solveTimes', JSON.stringify(solves));
-    updateDisplayedTimes(totalCentiseconds);
+    updateDisplayedTimes(cumulativeTime);
 }
 
 function updateDisplayedTimes(totalCentiseconds) {
