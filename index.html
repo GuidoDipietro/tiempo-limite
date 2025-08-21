@@ -17,14 +17,14 @@
         </div>
         <div class="input-section">
             <label for="event">Evento WCA:</label>
-            <select id="event" onchange="updateSolveFields()" aria-label="Seleccionar evento WCA">
+            <select id="event" aria-label="Seleccionar evento WCA">
                 <option value="5" selected>2x2, 3x3, Pyraminx, etc. (5 intentos)</option>
                 <option value="3">6x6, 7x7, a ciegas (3 intentos)</option>
             </select>
             <div class="time-limit-section">
                 <label>Tiempo límite acumulativo:</label>
                 <div class="time-limit-input">
-                    <input type="number" id="time-limit-min" min="0" placeholder="Min" aria-label="Minutos del límite de tiempo">
+                    <input type="number" id="time-limit-min" min="0" max="120" placeholder="Min" aria-label="Minutos del límite de tiempo">
                     <span class="separator">:</span>
                     <input type="number" id="time-limit-sec" min="0" max="59" placeholder="Seg" aria-label="Segundos del límite de tiempo">
                 </div>
@@ -50,8 +50,13 @@
         </div>
     </div>
     <script src="src/js/translations.js"></script>
+    <script src="src/js/helpers/validation.js"></script>
+    <script src="src/js/helpers/time.js"></script>
+    <script src="src/js/helpers/ui.js"></script>
+    <script src="src/js/helpers/solve-states.js"></script>
+    <script src="src/js/helpers/storage.js"></script>
     <script src="src/js/i18n.js"></script>
     <script src="src/js/flags.js"></script>
-    <script src="src/js/script.js"></script>
+    <script src="src/js/app.js"></script>
 </body>
 </html>
