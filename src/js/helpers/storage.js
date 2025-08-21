@@ -1,7 +1,17 @@
 function initializeLanguage() {
+    loadSavedLanguage();
     if (typeof updatePageLanguage === 'function') updatePageLanguage();
     if (typeof updateAllText === 'function') updateAllText();
     if (typeof updateLanguageButton === 'function') updateLanguageButton();
+}
+
+function loadSavedLanguage() {
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage) setLanguage(savedLanguage);
+}
+
+function saveLanguage(language) {
+    localStorage.setItem('language', language);
 }
 
 function loadSavedTimeLimit() {
@@ -16,11 +26,29 @@ function loadSavedTimeLimit() {
     }
 }
 
+function loadSavedEventConfig() {
+    const savedEventConfig = localStorage.getItem('eventConfig');
+    if (savedEventConfig) {
+        const eventSelect = document.getElementById('event');
+        eventSelect.value = savedEventConfig;
+    }
+}
+
+function saveEventConfig(eventValue) {
+    localStorage.setItem('eventConfig', eventValue);
+}
+
 function setupEventListeners() {
     document.getElementById('time-limit-min').addEventListener('input', validateTimeLimit);
     document.getElementById('time-limit-sec').addEventListener('input', validateTimeLimit);
     document.getElementById('time-limit-min').addEventListener('keydown', handleEnterKey);
     document.getElementById('time-limit-sec').addEventListener('keydown', handleEnterKey);
+    
+    const eventSelect = document.getElementById('event');
+    eventSelect.addEventListener('change', (event) => {
+        saveEventConfig(event.target.value);
+        updateSolveFields();
+    });
 }
 
 function resetAll() {
@@ -32,5 +60,7 @@ function resetAll() {
     });
     localStorage.removeItem('timeLimit');
     localStorage.removeItem('solveTimes');
+    localStorage.removeItem('eventConfig');
+    localStorage.removeItem('language');
     updateSolveFields();
 }

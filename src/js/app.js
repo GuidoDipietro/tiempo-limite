@@ -48,6 +48,7 @@ function updateResults(skipSave = false) {
 document.addEventListener('DOMContentLoaded', () => {
     initializeLanguage();
     loadSavedTimeLimit();
+    loadSavedEventConfig();
     setupEventListeners();
     updateSolveFields();
     

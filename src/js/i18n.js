@@ -14,6 +14,7 @@ function getText(key, replacements = {}) {
 
 function setLanguage(lang) {
 	window.currentLanguage = lang;
+	saveLanguage(lang);
 	updatePageLanguage();
 	updateAllText();
 	if (typeof window.updateLanguageButton === 'function') {
