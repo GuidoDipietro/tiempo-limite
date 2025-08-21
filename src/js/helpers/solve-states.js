@@ -1,21 +1,18 @@
-function updateSolveState(div, timeLimitCentiseconds, remainingTime, solveTime, wouldExceed, firstDNFIndex, currentIndex) {
-    if (timeLimitCentiseconds > 0) {
-        if (remainingTime <= 0 && solveTime === 0) {
-            setSolveToDNS(div);
-        } else if (firstDNFIndex !== -1 && currentIndex > firstDNFIndex) {
-            setSolveToDNS(div);
-        } else if (wouldExceed) {
-            showDNSWarning(div, true);
-        } else {
-            setSolveToNormal(div);
-            showDNSWarning(div, false);
-        }
+function updateSolveState(div, state) {
+    const { timeLimitCentiseconds, remainingTime, solveTime, wouldExceed, firstDNFIndex, currentIndex } = state;
+    
+    if (timeLimitCentiseconds === 0) {
+        setSolveToDisabled(div);
+        return;
+    }
+    
+    if (remainingTime <= 0 && solveTime === 0 || firstDNFIndex !== -1 && currentIndex > firstDNFIndex) {
+        setSolveToDNS(div);
+    } else if (wouldExceed) {
+        showDNSWarning(div, true);
     } else {
-        if (solveTime === 0) {
-            setSolveToDisabled(div);
-        } else {
-            setSolveToNormal(div);
-        }
+        setSolveToNormal(div);
+        showDNSWarning(div, false);
     }
 }
 

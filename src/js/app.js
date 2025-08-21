@@ -5,7 +5,7 @@ function calculateTimeLimit() {
     const timeLimitSecInput = document.getElementById('time-limit-sec').value;
     const timeLimitMin = parseTimeValue(timeLimitMinInput);
     const timeLimitSec = parseTimeValue(timeLimitSecInput);
-    return timeLimitMin * 6000 + timeLimitSec * 100;
+    return timeToCentiseconds(timeLimitMin, timeLimitSec, 0);
 }
 
 function saveTimeLimit(timeLimitMin, timeLimitSec) {
@@ -23,7 +23,7 @@ function processSolveInput(div, index, totalCentiseconds, timeLimitCentiseconds)
     const centiseconds = centisecondsInput.disabled && div.dataset.storedCentiseconds 
         ? parseTimeValue(div.dataset.storedCentiseconds)
         : parseTimeValue(centisecondsInput.value);
-    const solveTime = minutes * 6000 + seconds * 100 + centiseconds;
+    const solveTime = timeToCentiseconds(minutes, seconds, centiseconds);
     
     const wouldExceed = solveTime > 0 && (totalCentiseconds + solveTime) > timeLimitCentiseconds;
     
@@ -34,8 +34,7 @@ function updateResults(skipSave = false) {
     timeLimitCentiseconds = calculateTimeLimit();
 
     if (!skipSave) {
-        const timeLimitMin = Math.floor(timeLimitCentiseconds / 6000);
-        const timeLimitSec = Math.floor((timeLimitCentiseconds % 6000) / 100);
+        const { minutes: timeLimitMin, seconds: timeLimitSec } = centisecondsToTime(timeLimitCentiseconds);
         saveTimeLimit(timeLimitMin, timeLimitSec);
     }
 
@@ -58,7 +57,7 @@ function updateResults(skipSave = false) {
         
         solves.push({ minutes: solveData.minutes, seconds: solveData.seconds, centiseconds: solveData.centiseconds });
         
-        updateSolveState(div, timeLimitCentiseconds, remainingTime, solveData.solveTime, solveData.wouldExceed, firstDNFIndex, index);
+        updateSolveState(div, { timeLimitCentiseconds, remainingTime, solveTime: solveData.solveTime, wouldExceed: solveData.wouldExceed, firstDNFIndex, currentIndex: index });
     });
 
     localStorage.setItem('solveTimes', JSON.stringify(solves));

@@ -56,17 +56,21 @@ function handleLongTimeInput(div, inputs, solve) {
 }
 
 function setupInputEventListeners(input, div) {
-    input.addEventListener('focus', () => updateTooltip(div));
-    input.addEventListener('blur', () => updateTooltip(div));
-    input.addEventListener('keydown', handleEnterKey);
-    input.addEventListener('input', () => {
-        const maxValue = getMaxValueForInput(input);
-        validateInput(input, maxValue);
-        if (input.classList.contains('minutes')) handleMinutesInput(div);
-        if (input.classList.contains('seconds') || input.classList.contains('centiseconds')) div.querySelector('.tooltip').style.display = 'none';
-        updateResults();
-        updateTooltip(div);
-    });
+    const events = {
+        focus: () => updateTooltip(div),
+        blur: () => updateTooltip(div),
+        keydown: handleEnterKey,
+        input: () => {
+            const maxValue = getMaxValueForInput(input);
+            validateInput(input, maxValue);
+            if (input.classList.contains('minutes')) handleMinutesInput(div);
+            if (input.classList.contains('seconds') || input.classList.contains('centiseconds')) div.querySelector('.tooltip').style.display = 'none';
+            updateResults();
+            updateTooltip(div);
+        }
+    };
+    
+    Object.entries(events).forEach(([event, handler]) => input.addEventListener(event, handler));
 }
 
 function setupSolveInput(div, solve) {
