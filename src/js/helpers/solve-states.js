@@ -29,7 +29,7 @@ function setSolveToDNS(div) {
     div.classList.remove('dnf-warning');
 }
 
-function setSolveToNormal(div) {
+function setInputStates(div, disabled = false) {
     const inputs = div.querySelectorAll('input');
     const minutesInput = div.querySelector('.minutes');
     const minutes = parseInt(minutesInput.value) || 0;
@@ -38,10 +38,13 @@ function setSolveToNormal(div) {
         if (input.classList.contains('centiseconds') && minutes >= 10) {
             input.disabled = true;
         } else {
-            input.disabled = false;
+            input.disabled = disabled;
         }
     });
-    
+}
+
+function setSolveToNormal(div) {
+    setInputStates(div, false);
     div.classList.remove('dns-disabled', 'dnf-warning', 'disabled-no-limit');
 }
 
@@ -57,18 +60,8 @@ function setSolveToDisabled(div) {
 }
 
 function showDNSWarning(div, show) {
-    const inputs = div.querySelectorAll('input');
     if (show) {
-        const minutesInput = div.querySelector('.minutes');
-        const minutes = parseInt(minutesInput.value) || 0;
-        
-        inputs.forEach(input => {
-            if (input.classList.contains('centiseconds') && minutes >= 10) {
-                input.disabled = true;
-            } else {
-                input.disabled = false;
-            }
-        });
+        setInputStates(div, false);
         div.classList.add('dnf-warning');
         div.classList.remove('dns-disabled');
     } else {

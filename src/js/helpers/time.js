@@ -7,9 +7,8 @@ function formatTime(centiseconds) {
     return `${centiseconds < 0 ? '-' : ''}${Math.floor(abs / 6000)}:${Math.floor((abs % 6000) / 100).toString().padStart(2, '0')}.${(abs % 100).toString().padStart(2, '0')}`;
 }
 
-function handleMinutesInput(div) {
+function handleMinutesInput(div, skipUpdate = false) {
     const minutesInput = div.querySelector('.minutes');
-    const secondsInput = div.querySelector('.seconds');
     const centisecondsInput = div.querySelector('.centiseconds');
     const minutes = parseInt(minutesInput.value) || 0;
 
@@ -26,5 +25,8 @@ function handleMinutesInput(div) {
         }
         centisecondsInput.disabled = false;
     }
-    updateResults();
+    
+    if (!skipUpdate) {
+        updateResults();
+    }
 }

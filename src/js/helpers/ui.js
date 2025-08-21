@@ -33,44 +33,61 @@ function closeHelpPopup() {
     popup.setAttribute('aria-hidden', 'true');
 }
 
+function getSolveInputs(div) {
+    return {
+        minutes: div.querySelector('.minutes'),
+        seconds: div.querySelector('.seconds'),
+        centiseconds: div.querySelector('.centiseconds')
+    };
+}
+
+function loadSolveValues(inputs, solve) {
+    inputs.minutes.value = solve.minutes || '';
+    inputs.seconds.value = solve.seconds || '';
+    inputs.centiseconds.value = solve.centiseconds || '';
+}
+
+function handleLongTimeInput(div, inputs, solve) {
+    if (parseInt(inputs.minutes.value) >= 10 && solve.centiseconds) {
+        div.dataset.storedCentiseconds = solve.centiseconds;
+        inputs.centiseconds.value = '';
+        inputs.centiseconds.disabled = true;
+    }
+}
+
+function setupInputEventListeners(input, div) {
+    input.addEventListener('focus', () => updateTooltip(div));
+    input.addEventListener('blur', () => updateTooltip(div));
+    input.addEventListener('keydown', handleEnterKey);
+    input.addEventListener('input', () => {
+        const maxValue = getMaxValueForInput(input);
+        validateInput(input, maxValue);
+        if (input.classList.contains('minutes')) handleMinutesInput(div);
+        if (input.classList.contains('seconds') || input.classList.contains('centiseconds')) div.querySelector('.tooltip').style.display = 'none';
+        updateResults();
+        updateTooltip(div);
+    });
+}
+
+function setupSolveInput(div, solve) {
+    const inputs = getSolveInputs(div);
+    
+    loadSolveValues(inputs, solve);
+    handleLongTimeInput(div, inputs, solve);
+    
+    handleMinutesInput(div, true);
+    updateTooltip(div);
+
+    Object.values(inputs).forEach(input => setupInputEventListeners(input, div));
+}
+
 function updateSolveFields() {
     const numSolves = parseInt(document.getElementById('event').value);
     document.getElementById('solve-fields').innerHTML = Array.from({ length: numSolves }, (_, i) => createSolveInput(i + 1)).join('');
 
     const savedSolves = JSON.parse(localStorage.getItem('solveTimes') || '{}');
     document.querySelectorAll('.solve-input').forEach((div, index) => {
-        const solve = savedSolves[index] || {};
-        const inputs = {
-            minutes: div.querySelector('.minutes'),
-            seconds: div.querySelector('.seconds'),
-            centiseconds: div.querySelector('.centiseconds')
-        };
-        inputs.minutes.value = solve.minutes || '';
-        inputs.seconds.value = solve.seconds || '';
-        inputs.centiseconds.value = solve.centiseconds || '';
-        
-        if (parseInt(inputs.minutes.value) >= 10 && solve.centiseconds) {
-            div.dataset.storedCentiseconds = solve.centiseconds;
-            inputs.centiseconds.value = '';
-            inputs.centiseconds.disabled = true;
-        }
-        
-        handleMinutesInput(div);
-        updateTooltip(div);
-
-        Object.values(inputs).forEach(input => {
-            input.addEventListener('focus', () => updateTooltip(div));
-            input.addEventListener('blur', () => updateTooltip(div));
-            input.addEventListener('keydown', handleEnterKey);
-            input.addEventListener('input', () => {
-                const maxValue = getMaxValueForInput(input);
-                validateInput(input, maxValue);
-                if (input.classList.contains('minutes')) handleMinutesInput(div);
-                if (input.classList.contains('seconds') || input.classList.contains('centiseconds')) div.querySelector('.tooltip').style.display = 'none';
-                updateResults();
-                updateTooltip(div);
-            });
-        });
+        setupSolveInput(div, savedSolves[index] || {});
     });
 
     updateResults(true);
