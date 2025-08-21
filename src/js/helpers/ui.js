@@ -44,18 +44,28 @@ function getSolveInputs(div) {
 function loadSolveValues(inputs, solve) {
     inputs.minutes.value = solve.minutes !== undefined ? solve.minutes : '';
     inputs.seconds.value = solve.seconds !== undefined ? solve.seconds : '';
-    inputs.centiseconds.value = solve.centiseconds !== undefined ? solve.centiseconds : '';
+    
+    if (solve.storedCentiseconds !== undefined) {
+        inputs.centiseconds.parentElement.dataset.storedCentiseconds = solve.storedCentiseconds;
+        inputs.centiseconds.value = solve.storedCentiseconds;
+    } else {
+        inputs.centiseconds.value = solve.centiseconds !== undefined ? solve.centiseconds : '';
+    }
     
     if (solve.minutes !== undefined || solve.seconds !== undefined || solve.centiseconds !== undefined) {
         formatTimeField(inputs.seconds);
-        formatTimeField(inputs.centiseconds);
+        if (!inputs.centiseconds.disabled) {
+            formatTimeField(inputs.centiseconds);
+        }
     }
 }
 
 function handleLongTimeInput(div, inputs, solve) {
-    if (parseInt(inputs.minutes.value) >= 10 && solve.centiseconds) {
-        div.dataset.storedCentiseconds = solve.centiseconds;
-        inputs.centiseconds.value = '';
+    if (parseInt(inputs.minutes.value) >= 10) {
+        if (solve.centiseconds) {
+            div.dataset.storedCentiseconds = solve.centiseconds;
+            inputs.centiseconds.value = '';
+        }
         inputs.centiseconds.disabled = true;
     }
 }

@@ -1,29 +1,35 @@
 function updateSolveState(div, state) {
-    const { timeLimitCentiseconds, remainingTime, solveTime, wouldExceed, firstDNFIndex, currentIndex } = state;
+    const { isDNF, isDNS, solveTime } = state;
     
-    if (timeLimitCentiseconds === 0) {
-        setSolveToDisabled(div);
-        return;
-    }
-    
-    if (remainingTime <= 0 && solveTime === 0 || firstDNFIndex !== -1 && currentIndex > firstDNFIndex) {
+    if (isDNS) {
         setSolveToDNS(div);
-    } else if (wouldExceed) {
-        showDNSWarning(div, true);
+    } else if (isDNF) {
+        setSolveToDNF(div);
     } else {
         setSolveToNormal(div);
-        showDNSWarning(div, false);
     }
 }
 
 function setSolveToDNS(div) {
     const inputs = div.querySelectorAll('input');
+    const centisecondsInput = div.querySelector('.centiseconds');
+    
+    if (centisecondsInput.value !== '' && !div.dataset.storedCentiseconds) {
+        div.dataset.storedCentiseconds = centisecondsInput.value;
+    }
+    
     inputs.forEach(input => {
         input.disabled = true;
     });
     
     div.classList.add('dns-disabled');
     div.classList.remove('dnf-warning');
+}
+
+function setSolveToDNF(div) {
+    setInputStates(div, false);
+    div.classList.add('dnf-warning');
+    div.classList.remove('dns-disabled');
 }
 
 function setInputStates(div, disabled = false) {

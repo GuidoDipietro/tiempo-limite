@@ -25,7 +25,7 @@ function handleMinutesInput(div, skipUpdate = false) {
     const minutes = parseInt(minutesInput.value) || 0;
 
     if (minutes >= 10) {
-        if (!centisecondsInput.disabled) {
+        if (!centisecondsInput.disabled && centisecondsInput.value !== '') {
             div.dataset.storedCentiseconds = centisecondsInput.value;
             centisecondsInput.value = '';
         }
