@@ -47,14 +47,8 @@ function setupEventListeners() {
     
     const timeLimitBlurHandler = () => {
         setTimeout(() => {
-            const timeLimitInput = document.querySelector('.time-limit-input');
-            if (!timeLimitInput.contains(document.activeElement)) {
-                const secondsInput = document.getElementById('time-limit-sec');
-                const minutesInput = document.getElementById('time-limit-min');
-                if (minutesInput.value !== '' || secondsInput.value !== '') {
-                    formatTimeField(secondsInput);
-                }
-            }
+            const secondsInput = document.getElementById('time-limit-sec');
+            formatTimeField(secondsInput);
         }, 0);
     };
     

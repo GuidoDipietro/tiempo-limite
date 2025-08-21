@@ -66,14 +66,12 @@ function setupInputEventListeners(input, div) {
         blur: () => {
             setTimeout(() => {
                 if (!div.contains(document.activeElement)) {
-                    const inputs = div.querySelectorAll('input');
-                    const hasAnyValue = Array.from(inputs).some(input => {
-                        const value = parseInt(input.value) || 0;
-                        return value > 0;
-                    });
+                    const inputs = getSolveInputs(div);
+                    const hasAnyValue = inputs.minutes.value !== '' || inputs.seconds.value !== '' || inputs.centiseconds.value !== '';
                     
                     if (hasAnyValue) {
-                        formatTimeField(input);
+                        formatTimeField(inputs.seconds);
+                        formatTimeField(inputs.centiseconds);
                         ensureNonEmptyFields(div);
                     }
                     updateResults();
