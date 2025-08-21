@@ -18,6 +18,7 @@ function updateResults(skipSave = false) {
     let totalCentiseconds = 0;
     const solves = [];
     let remainingTime = timeLimitCentiseconds;
+    let firstDNFIndex = -1;
     
     document.querySelectorAll('.solve-input').forEach((div, index) => {
         const minutes = parseTimeValue(div.querySelector('.minutes').value);
@@ -25,7 +26,11 @@ function updateResults(skipSave = false) {
         const centiseconds = parseTimeValue(div.querySelector('.centiseconds').value);
         const solveTime = minutes * 6000 + seconds * 100 + centiseconds;
         
-        const wouldExceed = solveTime > 0 && remainingTime - solveTime < 0;
+        const wouldExceed = solveTime > 0 && (totalCentiseconds + solveTime) > timeLimitCentiseconds;
+        
+        if (wouldExceed && firstDNFIndex === -1) {
+            firstDNFIndex = index;
+        }
         
         if (solveTime > 0) {
             totalCentiseconds += solveTime;
@@ -34,7 +39,7 @@ function updateResults(skipSave = false) {
         
         solves.push({ minutes, seconds, centiseconds });
         
-        updateSolveState(div, timeLimitCentiseconds, remainingTime, solveTime, wouldExceed);
+        updateSolveState(div, timeLimitCentiseconds, remainingTime, solveTime, wouldExceed, firstDNFIndex, index);
     });
 
     localStorage.setItem('solveTimes', JSON.stringify(solves));

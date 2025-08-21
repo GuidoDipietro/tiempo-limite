@@ -49,6 +49,12 @@ function updateSolveFields() {
         inputs.seconds.value = solve.seconds || '';
         inputs.centiseconds.value = solve.centiseconds || '';
         
+        if (parseInt(inputs.minutes.value) >= 10 && solve.centiseconds) {
+            div.dataset.storedCentiseconds = solve.centiseconds;
+            inputs.centiseconds.value = '';
+            inputs.centiseconds.disabled = true;
+        }
+        
         handleMinutesInput(div);
         updateTooltip(div);
 

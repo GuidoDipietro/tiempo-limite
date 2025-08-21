@@ -1,6 +1,8 @@
-function updateSolveState(div, timeLimitCentiseconds, remainingTime, solveTime, wouldExceed) {
+function updateSolveState(div, timeLimitCentiseconds, remainingTime, solveTime, wouldExceed, firstDNFIndex, currentIndex) {
     if (timeLimitCentiseconds > 0) {
         if (remainingTime <= 0 && solveTime === 0) {
+            setSolveToDNS(div);
+        } else if (firstDNFIndex !== -1 && currentIndex > firstDNFIndex) {
             setSolveToDNS(div);
         } else if (wouldExceed) {
             showDNSWarning(div, true);
@@ -21,7 +23,6 @@ function setSolveToDNS(div) {
     const inputs = div.querySelectorAll('input');
     inputs.forEach(input => {
         input.disabled = true;
-        input.value = '';
     });
     
     div.classList.add('dns-disabled');
@@ -30,8 +31,15 @@ function setSolveToDNS(div) {
 
 function setSolveToNormal(div) {
     const inputs = div.querySelectorAll('input');
+    const minutesInput = div.querySelector('.minutes');
+    const minutes = parseInt(minutesInput.value) || 0;
+    
     inputs.forEach(input => {
-        input.disabled = false;
+        if (input.classList.contains('centiseconds') && minutes >= 10) {
+            input.disabled = true;
+        } else {
+            input.disabled = false;
+        }
     });
     
     div.classList.remove('dns-disabled', 'dnf-warning', 'disabled-no-limit');
@@ -49,8 +57,20 @@ function setSolveToDisabled(div) {
 }
 
 function showDNSWarning(div, show) {
+    const inputs = div.querySelectorAll('input');
     if (show) {
+        const minutesInput = div.querySelector('.minutes');
+        const minutes = parseInt(minutesInput.value) || 0;
+        
+        inputs.forEach(input => {
+            if (input.classList.contains('centiseconds') && minutes >= 10) {
+                input.disabled = true;
+            } else {
+                input.disabled = false;
+            }
+        });
         div.classList.add('dnf-warning');
+        div.classList.remove('dns-disabled');
     } else {
         div.classList.remove('dnf-warning');
     }
