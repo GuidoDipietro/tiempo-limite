@@ -49,7 +49,6 @@ function setSolveToDisabled(div) {
     const inputs = div.querySelectorAll('input');
     inputs.forEach(input => {
         input.disabled = true;
-        input.value = '';
     });
     
     div.classList.add('disabled-no-limit');

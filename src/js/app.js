@@ -23,9 +23,7 @@ function processSolveInput(div, index, totalCentiseconds, timeLimitCentiseconds)
     
     const minutes = parseTimeValue(minutesInput.value);
     const seconds = parseTimeValue(secondsInput.value);
-    const centiseconds = centisecondsInput.disabled && div.dataset.storedCentiseconds 
-        ? parseTimeValue(div.dataset.storedCentiseconds)
-        : parseTimeValue(centisecondsInput.value);
+    const centiseconds = centisecondsInput.disabled ? 0 : parseTimeValue(centisecondsInput.value);
     
     const solveTime = timeToCentiseconds(minutes, seconds, centiseconds);
     const wouldExceed = solveTime > 0 && (totalCentiseconds + solveTime) > timeLimitCentiseconds;
