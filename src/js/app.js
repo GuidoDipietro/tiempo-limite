@@ -19,7 +19,10 @@ function saveTimeLimit(timeLimitMin, timeLimitSec) {
 function processSolveInput(div, index, totalCentiseconds, timeLimitCentiseconds) {
     const minutes = parseTimeValue(div.querySelector('.minutes').value);
     const seconds = parseTimeValue(div.querySelector('.seconds').value);
-    const centiseconds = parseTimeValue(div.querySelector('.centiseconds').value);
+    const centisecondsInput = div.querySelector('.centiseconds');
+    const centiseconds = centisecondsInput.disabled && div.dataset.storedCentiseconds 
+        ? parseTimeValue(div.dataset.storedCentiseconds)
+        : parseTimeValue(centisecondsInput.value);
     const solveTime = minutes * 6000 + seconds * 100 + centiseconds;
     
     const wouldExceed = solveTime > 0 && (totalCentiseconds + solveTime) > timeLimitCentiseconds;
