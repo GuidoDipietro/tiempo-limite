@@ -71,7 +71,9 @@ function setupInputEventListeners(input, div) {
                     
                     if (hasAnyValue) {
                         formatTimeField(inputs.seconds);
-                        formatTimeField(inputs.centiseconds);
+                        if (!inputs.centiseconds.disabled) {
+                            formatTimeField(inputs.centiseconds);
+                        }
                         ensureNonEmptyFields(div);
                     }
                     updateResults();

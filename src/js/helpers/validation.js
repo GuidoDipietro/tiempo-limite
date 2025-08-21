@@ -8,8 +8,11 @@ function formatTimeField(input) {
     if (input.classList.contains('seconds') || input.classList.contains('centiseconds') || input.id === 'time-limit-sec') {
         if (input.value === '') {
             input.value = '00';
-        } else if (input.value.length === 1) {
-            input.value = '0' + input.value;
+        } else {
+            const num = parseInt(input.value);
+            if (!isNaN(num)) {
+                input.value = num.toString().padStart(2, '0');
+            }
         }
     }
 }
@@ -23,7 +26,7 @@ function ensureNonEmptyFields(div) {
     
     if (hasAnyValue) {
         inputs.forEach(input => {
-            if ((input.classList.contains('seconds') || input.classList.contains('centiseconds')) && input.value === '') {
+            if ((input.classList.contains('seconds') || input.classList.contains('centiseconds')) && input.value === '' && !input.disabled) {
                 input.value = '00';
             }
         });

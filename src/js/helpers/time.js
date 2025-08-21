@@ -30,12 +30,14 @@ function handleMinutesInput(div, skipUpdate = false) {
             centisecondsInput.value = '';
         }
         centisecondsInput.disabled = true;
+        centisecondsInput.placeholder = '';
     } else {
         if (centisecondsInput.disabled) {
             centisecondsInput.value = div.dataset.storedCentiseconds || '';
             delete div.dataset.storedCentiseconds;
         }
         centisecondsInput.disabled = false;
+        centisecondsInput.placeholder = getText('centiPlaceholder');
     }
     
     if (!skipUpdate) {
