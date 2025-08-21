@@ -20,6 +20,7 @@ function loadSavedTimeLimit() {
         const parsed = JSON.parse(savedTimeLimit);
         document.getElementById('time-limit-min').value = parsed.minutes || '';
         document.getElementById('time-limit-sec').value = parsed.seconds || '';
+        formatTimeField(document.getElementById('time-limit-sec'));
     } else {
         document.getElementById('time-limit-min').value = '';
         document.getElementById('time-limit-sec').value = '';
@@ -44,6 +45,16 @@ function setupEventListeners() {
     document.getElementById('time-limit-min').addEventListener('keydown', handleEnterKey);
     document.getElementById('time-limit-sec').addEventListener('keydown', handleEnterKey);
     
+    const timeLimitBlurHandler = () => {
+        setTimeout(() => {
+            const secondsInput = document.getElementById('time-limit-sec');
+            formatTimeField(secondsInput);
+        }, 0);
+    };
+    
+    document.getElementById('time-limit-min').addEventListener('blur', timeLimitBlurHandler);
+    document.getElementById('time-limit-sec').addEventListener('blur', timeLimitBlurHandler);
+    
     const eventSelect = document.getElementById('event');
     eventSelect.addEventListener('change', (event) => {
         saveEventConfig(event.target.value);
@@ -60,7 +71,5 @@ function resetAll() {
     });
     localStorage.removeItem('timeLimit');
     localStorage.removeItem('solveTimes');
-    localStorage.removeItem('eventConfig');
-    localStorage.removeItem('language');
     updateSolveFields();
 }
