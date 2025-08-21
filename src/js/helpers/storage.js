@@ -60,7 +60,5 @@ function resetAll() {
     });
     localStorage.removeItem('timeLimit');
     localStorage.removeItem('solveTimes');
-    localStorage.removeItem('eventConfig');
-    localStorage.removeItem('language');
     updateSolveFields();
 }
