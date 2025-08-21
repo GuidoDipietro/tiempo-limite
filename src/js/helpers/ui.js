@@ -42,9 +42,14 @@ function getSolveInputs(div) {
 }
 
 function loadSolveValues(inputs, solve) {
-    inputs.minutes.value = solve.minutes || '';
-    inputs.seconds.value = solve.seconds || '';
-    inputs.centiseconds.value = solve.centiseconds || '';
+    inputs.minutes.value = solve.minutes !== undefined ? solve.minutes : '';
+    inputs.seconds.value = solve.seconds !== undefined ? solve.seconds : '';
+    inputs.centiseconds.value = solve.centiseconds !== undefined ? solve.centiseconds : '';
+    
+    if (solve.minutes !== undefined || solve.seconds !== undefined || solve.centiseconds !== undefined) {
+        formatTimeField(inputs.seconds);
+        formatTimeField(inputs.centiseconds);
+    }
 }
 
 function handleLongTimeInput(div, inputs, solve) {
@@ -58,7 +63,24 @@ function handleLongTimeInput(div, inputs, solve) {
 function setupInputEventListeners(input, div) {
     const events = {
         focus: () => updateTooltip(div),
-        blur: () => updateTooltip(div),
+        blur: () => {
+            setTimeout(() => {
+                if (!div.contains(document.activeElement)) {
+                    const inputs = div.querySelectorAll('input');
+                    const hasAnyValue = Array.from(inputs).some(input => {
+                        const value = parseInt(input.value) || 0;
+                        return value > 0;
+                    });
+                    
+                    if (hasAnyValue) {
+                        formatTimeField(input);
+                        ensureNonEmptyFields(div);
+                    }
+                    updateResults();
+                }
+            }, 0);
+            updateTooltip(div);
+        },
         keydown: handleEnterKey,
         input: () => {
             const maxValue = getMaxValueForInput(input);

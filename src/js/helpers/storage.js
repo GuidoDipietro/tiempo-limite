@@ -20,6 +20,7 @@ function loadSavedTimeLimit() {
         const parsed = JSON.parse(savedTimeLimit);
         document.getElementById('time-limit-min').value = parsed.minutes || '';
         document.getElementById('time-limit-sec').value = parsed.seconds || '';
+        formatTimeField(document.getElementById('time-limit-sec'));
     } else {
         document.getElementById('time-limit-min').value = '';
         document.getElementById('time-limit-sec').value = '';
@@ -43,6 +44,22 @@ function setupEventListeners() {
     document.getElementById('time-limit-sec').addEventListener('input', validateTimeLimit);
     document.getElementById('time-limit-min').addEventListener('keydown', handleEnterKey);
     document.getElementById('time-limit-sec').addEventListener('keydown', handleEnterKey);
+    
+    const timeLimitBlurHandler = () => {
+        setTimeout(() => {
+            const timeLimitInput = document.querySelector('.time-limit-input');
+            if (!timeLimitInput.contains(document.activeElement)) {
+                const secondsInput = document.getElementById('time-limit-sec');
+                const minutesInput = document.getElementById('time-limit-min');
+                if (minutesInput.value !== '' || secondsInput.value !== '') {
+                    formatTimeField(secondsInput);
+                }
+            }
+        }, 0);
+    };
+    
+    document.getElementById('time-limit-min').addEventListener('blur', timeLimitBlurHandler);
+    document.getElementById('time-limit-sec').addEventListener('blur', timeLimitBlurHandler);
     
     const eventSelect = document.getElementById('event');
     eventSelect.addEventListener('change', (event) => {

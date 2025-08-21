@@ -17,17 +17,28 @@ function saveTimeLimit(timeLimitMin, timeLimitSec) {
 }
 
 function processSolveInput(div, index, totalCentiseconds, timeLimitCentiseconds) {
-    const minutes = parseTimeValue(div.querySelector('.minutes').value);
-    const seconds = parseTimeValue(div.querySelector('.seconds').value);
+    const minutesInput = div.querySelector('.minutes');
+    const secondsInput = div.querySelector('.seconds');
     const centisecondsInput = div.querySelector('.centiseconds');
+    
+    const minutes = parseTimeValue(minutesInput.value);
+    const seconds = parseTimeValue(secondsInput.value);
     const centiseconds = centisecondsInput.disabled && div.dataset.storedCentiseconds 
         ? parseTimeValue(div.dataset.storedCentiseconds)
         : parseTimeValue(centisecondsInput.value);
-    const solveTime = timeToCentiseconds(minutes, seconds, centiseconds);
     
+    const solveTime = timeToCentiseconds(minutes, seconds, centiseconds);
     const wouldExceed = solveTime > 0 && (totalCentiseconds + solveTime) > timeLimitCentiseconds;
     
-    return { minutes, seconds, centiseconds, solveTime, wouldExceed };
+    return { 
+        minutes: minutesInput.value === '' ? undefined : minutes,
+        seconds: secondsInput.value === '' ? undefined : seconds,
+        centiseconds: centisecondsInput.disabled && div.dataset.storedCentiseconds 
+            ? (div.dataset.storedCentiseconds === '' ? undefined : parseTimeValue(div.dataset.storedCentiseconds))
+            : (centisecondsInput.value === '' ? undefined : centiseconds),
+        solveTime, 
+        wouldExceed 
+    };
 }
 
 function updateResults(skipSave = false) {
